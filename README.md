@@ -1,409 +1,358 @@
-# SUI Wallet Frontend
+# 🚀 Sui Wallet - Full-Stack Web Application
 
-A modern, feature-rich React application for managing Sui blockchain wallets with a stunning neon-themed UI.
+A professional-grade web application for managing Sui blockchain accounts, sending tokens, and viewing transaction history. Built with Python (Flask), PySui SDK, and React.
 
-## 🎨 Features
+![Sui Wallet](https://img.shields.io/badge/Sui-Blockchain-00ff88)
+![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![React](https://img.shields.io/badge/React-18-61dafb)
+![Flask](https://img.shields.io/badge/Flask-3.0.3-lightgrey)
 
-- **Multi-Account Management** - Create and manage multiple Sui accounts
-- **Real-time Balance Tracking** - Live balance updates from Sui network
-- **Token Transfers** - Send SUI tokens with intuitive interface
-- **Transaction History** - Complete transaction visualization with charts
-- **QR Code Generation** - Share addresses easily
-- **Account Switching** - Seamlessly switch between accounts
-- **Network Status** - Live connection monitoring
-- **Responsive Design** - Works on desktop, tablet, and mobile
-- **Animated UI** - Smooth animations and modern design
+## ✨ Features
+
+- ✅ **Account Generation**: Create multiple Sui accounts with Ed25519 keypairs
+- ✅ **Account Management**: Switch between accounts seamlessly
+- ✅ **Send Tokens**: Transfer SUI tokens between accounts
+- ✅ **Transaction History**: View complete transaction history
+- ✅ **Real-time Balances**: Automatic balance updates
+- ✅ **Secure Storage**: Encrypted private key storage
+- ✅ **QR Codes**: Generate QR codes for account addresses
+- ✅ **Beautiful UI**: Modern, responsive design with smooth animations
 
 ## 📋 Prerequisites
 
-- Node.js 16+ and npm
-- Backend API running (see backend README)
+Before running this application, ensure you have:
 
-## 🚀 Installation
+- **Python 3.8+** installed
+- **Node.js 16+** and npm installed
+- **Git** installed
+- Internet connection for blockchain interaction
 
-### 1. Clone the Repository
+## 🛠️ Installation & Setup
+
+### 1️⃣ Clone the Repository
 
 ```bash
-git clone <your-repo-url>
-cd sui-wallet-frontend
+git clone <your-repository-url>
+cd sui-wallet
 ```
 
-### 2. Install Dependencies
+### 2️⃣ Backend Setup (Flask + PySui)
+
+#### Create Python Virtual Environment
+
+```bash
+# On Windows
+python -m venv venv
+venv\Scripts\activate
+
+# On macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### Install Python Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+**requirements.txt contents:**
+```
+Flask==3.0.3
+Flask-Cors==4.0.0
+pysui==0.52.0
+qrcode==7.4.2
+cryptography==42.0.5
+python-dotenv==1.0.0
+```
+
+### 3️⃣ Frontend Setup (React)
+
+#### Navigate to Frontend Directory
+
+```bash
+cd frontend
+```
+
+#### Install Node Dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Configure Environment
-
-Create a `.env` file in the root directory:
-
-```env
-REACT_APP_API_URL=http://localhost:5000
+**Required packages:**
+```bash
+npm install axios lucide-react qrcode.react recharts
 ```
 
-## 🏃 Running the Application
+## 🚀 Running the Application
 
-### Development Mode
+### Start Backend Server
+
+Open a terminal and run:
 
 ```bash
+# Make sure virtual environment is activated
+python app.py
+```
+
+The backend will start on **http://127.0.0.1:5000**
+
+You should see:
+```
+============================================================
+🚀 SUI WALLET BACKEND RUNNING
+📍 http://127.0.0.1:5000
+✅ Successfully connected to Sui testnet
+============================================================
+```
+
+### Start Frontend Development Server
+
+Open a **second terminal** and run:
+
+```bash
+cd frontend
 npm start
 ```
 
-The application will open at `http://localhost:3000`
+The frontend will start on **http://localhost:3000** and open in your browser automatically.
 
-### Production Build
-
-```bash
-npm run build
-```
-
-This creates an optimized production build in the `build/` directory.
-
-### Production Server
-
-```bash
-# Install serve globally
-npm install -g serve
-
-# Serve the build
-serve -s build -p 3000
-```
-
-## 📱 Application Structure
+## 📁 Project Structure
 
 ```
-sui-wallet-frontend/
-├── public/
-│   └── index.html
-├── src/
-│   ├── components/
-│   │   ├── Dashboard.jsx          # Main dashboard view
-│   │   ├── AccountManager.jsx     # Account creation/management
-│   │   ├── SendTokens.jsx         # Token transfer interface
-│   │   ├── TransactionHistory.jsx # Transaction list/visualization
-│   │   ├── AccountCard.jsx        # Account display component
-│   │   └── Navbar.jsx             # Navigation bar
-│   ├── App.jsx                    # Main application component
-│   ├── App.css                    # Global styles
-│   └── index.js                   # Application entry point
-├── package.json
-├── .env
-├── .gitignore
-└── README.md
+sui-wallet/
+├── backend/
+│   ├── app.py                 # Flask API server
+│   ├── wallet_manager.py      # Sui wallet operations
+│   ├── database.py           # SQLite database manager
+│   ├── transaction_service.py # Transaction handling
+│   └── requirements.txt      # Python dependencies
+├── frontend/
+│   ├── src/
+│   │   ├── App.js           # Main React component
+│   │   ├── App.css          # Global styles
+│   │   ├── components/
+│   │   │   ├── Navbar.js
+│   │   │   ├── Dashboard.js
+│   │   │   ├── AccountManager.js
+│   │   │   ├── AccountCard.js
+│   │   │   ├── SendTokens.js
+│   │   │   └── TransactionHistory.js
+│   │   └── index.js
+│   ├── package.json
+│   └── public/
+├── sui_wallet.db            # SQLite database (auto-created)
+├── .encryption_key          # Encryption key (auto-generated)
+└── README.md               # This file
 ```
 
-## 🎯 Key Components
+## 🎯 Usage Guide
 
-### Dashboard
-- Overview of all accounts
-- Total balance across accounts
-- Recent transaction activity
-- Transaction chart visualization
-- Quick account switching
+### Creating Your First Account
 
-### Account Manager
-- Create new accounts with custom names
-- View all accounts with balances
-- Edit account names
-- Delete accounts
-- Generate QR codes for receiving
-- View accounts on Sui Explorer
+1. **Open the application** at http://localhost:3000
+2. Click **"Create Account"** button
+3. Enter a nickname (optional) like "My Main Account"
+4. Click **"Create"**
+5. Your account will be generated with:
+   - Unique Sui address
+   - Secure encrypted private key
+   - Initial balance (0 SUI on testnet)
 
-### Send Tokens
-- Select recipient from address book
-- Enter amount with quick-select buttons
-- Transaction summary with gas estimates
-- Real-time balance validation
-- Transaction confirmation
+### Getting Testnet Tokens
 
-### Transaction History
-- Filter by sent/received
-- Pagination controls
-- Transaction statistics
-- View on blockchain explorer
-- Gas fee tracking
+To test sending transactions, you need testnet SUI tokens:
 
-## 🎨 Design Features
+1. Copy your account address
+2. Visit the **Sui Testnet Faucet**: https://discord.gg/sui
+3. Request tokens using: `!faucet <your-address>`
+4. Refresh your balance in the app
 
-### Modern UI Elements
-- **Neon Theme** - Cyberpunk-inspired color scheme
-- **Smooth Animations** - CSS transitions and keyframes
-- **Glassmorphism** - Modern card designs
-- **Responsive Layout** - Mobile-first approach
-- **Interactive Charts** - Chart.js visualizations
+### Sending Tokens
 
-### Color Palette
-```css
---sui-blue: #4da2ff
---sui-dark: #0a1929
---success: #00d4aa
---error: #ff5252
---warning: #ffb74d
-```
+1. Go to the **"Send"** tab
+2. Enter recipient address
+3. Enter amount
+4. Click **"Send Tokens"**
+5. Transaction will be executed on Sui testnet
 
-## 📦 Dependencies
+### Viewing History
 
-### Core
-- **react** (^18.2.0) - UI library
-- **react-dom** (^18.2.0) - React DOM renderer
+1. Go to the **"History"** tab
+2. View all transactions (sent/received)
+3. Filter by transaction type
+4. Click "View on Explorer" to see on blockchain
 
-### Utilities
-- **axios** (^1.6.0) - HTTP client
-- **chart.js** (^4.4.0) - Data visualization
-- **react-chartjs-2** (^5.2.0) - React Chart.js wrapper
-- **qrcode.react** (^3.1.0) - QR code generation
-- **lucide-react** (^0.294.0) - Icon library
+## 🔒 Security Features
 
-### Styling
-- **tailwindcss** (^3.3.0) - Utility-first CSS
+- **Encrypted Private Keys**: All private keys are encrypted using Fernet symmetric encryption
+- **Local Storage**: Keys never leave your machine
+- **Secure Database**: SQLite with encrypted key storage
+- **No Key Transmission**: Private keys are never sent over the network
 
-## 🔧 Configuration
+## 🌐 API Endpoints
 
-### Environment Variables
+### Health Check
+- `GET /` - Basic health check
+- `GET /api/health` - API health status
 
-```env
-# Backend API URL
-REACT_APP_API_URL=http://localhost:5000
+### Account Management
+- `GET /api/accounts` - Get all accounts
+- `GET /api/accounts/active` - Get active account
+- `POST /api/accounts/create` - Create new account
+  ```json
+  {
+    "nickname": "My Account"
+  }
+  ```
+- `POST /api/accounts/switch` - Switch active account
+  ```json
+  {
+    "account_id": 1
+  }
+  ```
 
-# Optional: Custom port
-PORT=3000
-```
+### Transactions
+- `POST /api/send` - Send SUI tokens
+  ```json
+  {
+    "from_account_id": 1,
+    "to_address": "0x...",
+    "amount": 0.1
+  }
+  ```
+- `GET /api/transactions/<address>` - Get transaction history
 
-### Tailwind Configuration
-
-The app uses Tailwind CSS. Configuration is in `tailwind.config.js`:
-
-```javascript
-module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  theme: {
-    extend: {
-      colors: {
-        'sui-blue': '#4da2ff',
-        'sui-dark': '#0a1929',
-      }
-    },
-  },
-  plugins: [],
-}
-```
-
-## 🧪 Testing
-
-### Manual Testing Checklist
-
-- [ ] Create a new account
-- [ ] Switch between accounts
-- [ ] Check balance updates
-- [ ] Send tokens to another account
-- [ ] View transaction history
-- [ ] Generate QR code
-- [ ] Edit account name
-- [ ] Delete account
-- [ ] Responsive design on mobile
-
-### API Connection Test
-
-```javascript
-// Test connection to backend
-fetch('http://localhost:5000/api/health')
-  .then(res => res.json())
-  .then(data => console.log(data));
-```
+### Balance
+- `GET /api/balance/<address>` - Get SUI balance
 
 ## 🐛 Troubleshooting
 
-### CORS Issues
+### Backend Issues
 
-If you encounter CORS errors:
-
-1. Ensure backend is running with CORS enabled
-2. Check `REACT_APP_API_URL` in `.env`
-3. Verify Flask-CORS is installed on backend
-
-### Build Issues
-
+**Problem: "Module not found" error**
 ```bash
-# Clear npm cache
-npm cache clean --force
+# Solution: Reinstall dependencies
+pip install -r requirements.txt
+```
 
-# Delete node_modules and reinstall
+**Problem: "Connection to Sui network failed"**
+```bash
+# Solution: Check internet connection and RPC endpoint
+# The app will work in offline mode for account creation
+```
+
+**Problem: Port 5000 already in use**
+```bash
+# Solution: Change port in app.py
+app.run(debug=True, host='127.0.0.1', port=5001)
+```
+
+### Frontend Issues
+
+**Problem: "Cannot connect to backend"**
+```bash
+# Solution: Ensure backend is running on port 5000
+# Check CORS settings in app.py
+```
+
+**Problem: "npm start fails"**
+```bash
+# Solution: Clear cache and reinstall
 rm -rf node_modules package-lock.json
 npm install
+npm start
 ```
 
-### Chart.js Not Rendering
+## 🎨 Key Features Explained
 
-```bash
-# Reinstall Chart.js dependencies
-npm install chart.js react-chartjs-2 --save
+### Fixed Navbar
+The navbar stays at the top when scrolling, providing easy navigation at all times.
+
+### Real-time Balance Updates
+Balances automatically refresh when you switch accounts or complete transactions.
+
+### QR Code Generation
+Each account can generate a QR code for easy address sharing.
+
+### Transaction Explorer Links
+Click any transaction to view it on the official Sui Explorer.
+
+### Responsive Design
+Works perfectly on desktop, tablet, and mobile devices.
+
+## 📊 Database Schema
+
+### Accounts Table
+```sql
+CREATE TABLE accounts (
+    id INTEGER PRIMARY KEY,
+    nickname TEXT,
+    address TEXT UNIQUE,
+    private_key_encrypted BLOB,
+    scheme TEXT,
+    created_at TIMESTAMP,
+    is_active INTEGER
+)
 ```
 
-## 📱 Responsive Breakpoints
-
-```css
-/* Mobile */
-@media (max-width: 768px)
-
-/* Tablet */
-@media (max-width: 1200px)
-
-/* Desktop */
-@media (min-width: 1201px)
+### Transactions Table
+```sql
+CREATE TABLE transactions (
+    id INTEGER PRIMARY KEY,
+    digest TEXT UNIQUE,
+    from_address TEXT,
+    to_address TEXT,
+    amount REAL,
+    status TEXT,
+    timestamp TIMESTAMP
+)
 ```
 
-## 🎨 Customization
+## 🏆 Team Information
 
-### Change Theme Colors
+**Team Leader**: Esther Nakungu
 
-Edit `App.css`:
 
-```css
-:root {
-  --sui-blue: #your-color;
-  --success: #your-color;
-  --error: #your-color;
-}
-```
+**Submission Date**: September 2, 2025
 
-### Add New Components
+## 📝 License
 
-1. Create component in `src/components/`
-2. Import in `App.jsx`
-3. Add to navigation in `Navbar.jsx`
-4. Add route logic in `App.jsx`
-
-## 🚀 Deployment
-
-### Vercel
-
-```bash
-# Install Vercel CLI
-npm install -g vercel
-
-# Deploy
-vercel
-```
-
-### Netlify
-
-```bash
-# Install Netlify CLI
-npm install -g netlify-cli
-
-# Build and deploy
-npm run build
-netlify deploy --prod --dir=build
-```
-
-### GitHub Pages
-
-```bash
-# Install gh-pages
-npm install gh-pages --save-dev
-
-# Add to package.json
-"homepage": "https://yourusername.github.io/sui-wallet",
-"scripts": {
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d build"
-}
-
-# Deploy
-npm run deploy
-```
-
-## 📊 Performance Optimization
-
-### Code Splitting
-Already configured with React.lazy():
-```javascript
-const Dashboard = React.lazy(() => import('./components/Dashboard'));
-```
-
-### Bundle Size Analysis
-```bash
-npm run build
-npm install -g source-map-explorer
-source-map-explorer 'build/static/js/*.js'
-```
-
-## 🔐 Security Best Practices
-
-- Never commit `.env` file
-- Validate all user inputs
-- Use HTTPS in production
-- Implement rate limiting
-- Add authentication for production
+This project is submitted for the Sui Wallet Challenge.
 
 ## 🤝 Contributing
 
+This project was built for a competition, but improvements are welcome:
+
 1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-## 📄 License
+## 📧 Contact
 
-MIT License - See LICENSE file for details
-
-## 👥 Team
-
-- Team Leader: [Esther Nakungu]
-- Developer: [Esther Nakungu]
-- Designer: [Esther Nakungu]
-
-## 🏆 Project Submission
-
-This project was created for the Sui Wallet Development Competition.
-
-**Deadline:** September 2, 2025
-**Prize:** $40 for winning team
-
-## 📞 Support
-
-For issues or questions:
-- GitHub Issues: [Your Repo URL]
-- Email: nakunguesther044@gmail.com
+For questions or issues, please open an issue on GitHub or contact the team leader.
 
 ## 🙏 Acknowledgments
 
-- Sui Foundation for the blockchain platform
-- Anthropic Claude for development assistance
-- Open source community for libraries and tools
+- **Sui Foundation** for the amazing blockchain platform
+- **PySui SDK** for the Python implementation
+- **React** for the frontend framework
+- **Flask** for the backend framework
+
+## 🎯 Future Enhancements
+
+- [ ] Multi-signature support
+- [ ] NFT management
+- [ ] Staking functionality
+- [ ] DeFi integration
+- [ ] Mobile app version
+- [ ] Hardware wallet support
 
 ---
 
+**Built with ❤️ for the Sui Blockchain Challenge**
 
-## 👤 Individual Submission Note
-
-
-This project was developed as an individual submission to:
-- Demonstrate mastery of full-stack blockchain development independently
-- Maintain consistent code quality and architectural decisions throughout
-- Showcase ability to integrate complex technologies (PySui SDK, Flask, React) without coordination overhead
-
-While the competition requests team submissions, this work demonstrates:
-- Comprehensive full-stack development skills across frontend, backend, and blockchain layers
-- Real blockchain integration expertise with Sui testnet (not simulated)
-- Professional-grade code quality with modular architecture and clean separation of concerns
-- Complete feature implementation exceeding requirements with additional features:
-  - Multi-account wallet management
-  - Real-time balance tracking
-  - QR code generation for addresses
-  - Visual transaction analytics with charts
-  - Transaction filtering and history
-  - Responsive UI with modern design principles
-
-**Technical Stack:**
-- Backend: Python 3.x, Flask, PySui SDK
-- Frontend: React 18, Recharts, Axios, Lucide Icons
-- Blockchain: Sui Testnet Integration
-
-**Contact:** [nakunguesther044@gmail.com]
-
-Made with ❤️ for Sui Blockchain
-
-**Good luck with your submission! 🚀**
+**Good luck to all participants! 🚀**
