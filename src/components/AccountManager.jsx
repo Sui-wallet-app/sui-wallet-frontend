@@ -3,44 +3,45 @@ import AccountCard from './AccountCard';
 import { Plus, AlertCircle } from 'lucide-react';
 
 function AccountManager({ accounts, activeAccount, createAccount, switchAccount }) {
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [nickname, setNickname] = useState('');
-  const [creating, setCreating] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleCreateAccount = async (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
-    setCreating(true);
+    setLoading(true);
     setError('');
 
     try {
-      await createAccount(nickname || 'Account');
+      await createAccount(nickname.trim() || 'Account');
       setNickname('');
-      setShowCreateForm(false);
+      setShowForm(false);
     } catch (err) {
       setError('Failed to create account. Please try again.');
     } finally {
-      setCreating(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="account-manager">
+      {/* Header */}
       <div className="section-header">
         <h2>Manage Accounts</h2>
         <button 
           className="btn-primary"
-          onClick={() => setShowCreateForm(!showCreateForm)}
+          onClick={() => setShowForm(prev => !prev)}
         >
-          <Plus size={20} />
-          Create Account
+          <Plus size={20} /> Create Account
         </button>
       </div>
 
-      {showCreateForm && (
+      {/* Create Account Form */}
+      {showForm && (
         <div className="create-account-form">
           <h3>Create New Account</h3>
-          <form onSubmit={handleCreateAccount}>
+          <form onSubmit={handleCreate}>
             <input
               type="text"
               placeholder="Account nickname (optional)"
@@ -49,17 +50,13 @@ function AccountManager({ accounts, activeAccount, createAccount, switchAccount 
               className="input-field"
             />
             <div className="form-actions">
-              <button 
-                type="submit" 
-                className="btn-primary"
-                disabled={creating}
-              >
-                {creating ? 'Creating...' : 'Create'}
+              <button type="submit" className="btn-primary" disabled={loading}>
+                {loading ? 'Creating...' : 'Create'}
               </button>
               <button 
                 type="button" 
                 className="btn-secondary"
-                onClick={() => setShowCreateForm(false)}
+                onClick={() => setShowForm(false)}
               >
                 Cancel
               </button>
@@ -67,13 +64,13 @@ function AccountManager({ accounts, activeAccount, createAccount, switchAccount 
           </form>
           {error && (
             <div className="error-message">
-              <AlertCircle size={16} />
-              {error}
+              <AlertCircle size={16} /> {error}
             </div>
           )}
         </div>
       )}
 
+      {/* Accounts Grid */}
       <div className="accounts-grid">
         {accounts.length === 0 ? (
           <div className="empty-state">
