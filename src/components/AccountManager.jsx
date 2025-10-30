@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AccountCard from './AccountCard';
 import { Plus, AlertCircle } from 'lucide-react';
 
-function AccountManager({ accounts, activeAccount, createAccount, switchAccount, deleteAccount }) {
+function AccountManager({ accounts, activeAccount, createAccount, switchAccount, deleteAccount, refreshBalance }) {
   const [showForm, setShowForm] = useState(false);
   const [nickname, setNickname] = useState('');
   const [loading, setLoading] = useState(false);
@@ -119,6 +119,7 @@ function AccountManager({ accounts, activeAccount, createAccount, switchAccount,
               isActive={activeAccount?.id === account.id}
               onSwitch={() => switchAccount(account.id)}
               onDelete={handleDelete}
+              refreshBalance={refreshBalance}
             />
           ))
         )}
