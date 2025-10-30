@@ -120,23 +120,52 @@ body {
 
 .account-indicator {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  padding: 0.5rem 1rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
   background: rgba(0, 255, 136, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(0, 255, 136, 0.2);
+  height: 40px;
+  max-width: 200px;
+}
+
+.account-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+  border-radius: 50%;
+  color: #0a0a0a;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.account-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
 }
 
 .account-nickname {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #00ff88;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
-.account-balance {
-  font-size: 0.8rem;
+.navbar-account .account-balance {
+  font-size: 0.7rem;
   color: #888;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 /* Main Content - Add padding top to account for fixed navbar */

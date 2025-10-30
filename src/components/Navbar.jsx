@@ -35,8 +35,13 @@ function Navbar({ activeView, setActiveView, activeAccount }) {
       {activeAccount && (
         <div className="navbar-account">
           <div className="account-indicator">
-            <span className="account-nickname">{activeAccount.nickname}</span>
-            <span className="account-balance">{activeAccount.balance?.toFixed(4)} SUI</span>
+            <div className="account-avatar">
+              {activeAccount.nickname.charAt(0).toUpperCase()}
+            </div>
+            <div className="account-info">
+              {/* <span className="account-nickname">{activeAccount.nickname}</span> */}
+              <span className="account-balance">{activeAccount.balance?.toFixed(4)} SUI</span>
+            </div>
           </div>
         </div>
       )}
