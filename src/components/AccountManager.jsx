@@ -2,25 +2,45 @@ import React, { useState } from 'react';
 import AccountCard from './AccountCard';
 import { Plus, AlertCircle } from 'lucide-react';
 
-function AccountManager({ accounts, activeAccount, createAccount, switchAccount }) {
+function AccountManager({ accounts, activeAccount, createAccount, switchAccount, deleteAccount }) {
   const [showForm, setShowForm] = useState(false);
   const [nickname, setNickname] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleCreate = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
-      await createAccount(nickname.trim() || 'Account');
-      setNickname('');
-      setShowForm(false);
+      const newAccount = await createAccount(nickname.trim() || 'Account');
+      if (newAccount) {
+        setSuccess(`Account "${nickname || 'Account'}" created successfully!`);
+        setNickname('');
+        setShowForm(false);
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => setSuccess(''), 3000);
+      }
     } catch (err) {
+      console.error('Error creating account:', err);
       setError('Failed to create account. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (accountId) => {
+    try {
+      await deleteAccount(accountId);
+      setSuccess('Account deleted successfully!');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      setError('Failed to delete account. Please try again.');
+      setTimeout(() => setError(''), 3000);
     }
   };
 
@@ -33,9 +53,23 @@ function AccountManager({ accounts, activeAccount, createAccount, switchAccount 
           className="btn-primary"
           onClick={() => setShowForm(prev => !prev)}
         >
-          <Plus size={20} /> Create Account
+          <Plus size={20} /> {showForm ? 'Cancel' : 'Create Account'}
         </button>
       </div>
+
+      {/* Success Message */}
+      {success && (
+        <div className="success-message">
+          <AlertCircle size={16} /> {success}
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="error-message">
+          <AlertCircle size={16} /> {error}
+        </div>
+      )}
 
       {/* Create Account Form */}
       {showForm && (
@@ -48,6 +82,7 @@ function AccountManager({ accounts, activeAccount, createAccount, switchAccount 
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               className="input-field"
+              disabled={loading}
             />
             <div className="form-actions">
               <button type="submit" className="btn-primary" disabled={loading}>
@@ -56,17 +91,17 @@ function AccountManager({ accounts, activeAccount, createAccount, switchAccount 
               <button 
                 type="button" 
                 className="btn-secondary"
-                onClick={() => setShowForm(false)}
+                onClick={() => {
+                  setShowForm(false);
+                  setNickname('');
+                  setError('');
+                }}
+                disabled={loading}
               >
                 Cancel
               </button>
             </div>
           </form>
-          {error && (
-            <div className="error-message">
-              <AlertCircle size={16} /> {error}
-            </div>
-          )}
         </div>
       )}
 
@@ -83,6 +118,7 @@ function AccountManager({ accounts, activeAccount, createAccount, switchAccount 
               account={account}
               isActive={activeAccount?.id === account.id}
               onSwitch={() => switchAccount(account.id)}
+              onDelete={handleDelete}
             />
           ))
         )}
