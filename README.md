@@ -352,8 +352,4 @@ For questions or issues, please open an issue on GitHub or contact the team lead
 - [ ] Mobile app version
 - [ ] Hardware wallet support
 
----
 
-**Built with ❤️ for the Sui Blockchain Challenge**
-
-**Good luck to all participants! 🚀**
