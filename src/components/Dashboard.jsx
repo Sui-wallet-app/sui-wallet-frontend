@@ -201,7 +201,7 @@ function Dashboard({ accounts, activeAccount, refreshBalance, forceRefreshBalanc
     <RefreshCw size={20} />
     Refresh
   </button>
-  <button onClick={forceRefreshBalance}>Force Refresh Balance</button>
+  {/* <button onClick={forceRefreshBalance}>Force Refresh Balance</button> */}
 </div>
       </div>
 

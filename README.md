@@ -165,9 +165,10 @@ sui-wallet/
 To test sending transactions, you need testnet SUI tokens:
 
 1. Copy your account address
-2. Visit the **Sui Testnet Faucet**: https://discord.gg/sui
-3. Request tokens using: `!faucet <your-address>`
-4. Refresh your balance in the app
+2. Go to: https://faucet.sui.io/
+3. Select "Testnet"
+4. Paste your wallet address
+5. Click "Request"
 
 ### Sending Tokens
 

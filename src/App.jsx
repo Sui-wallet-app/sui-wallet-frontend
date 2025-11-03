@@ -101,44 +101,6 @@ function App() {
     }
   };
 
- const forceRefreshBalance = async () => {
-  if (activeAccount) {
-    try {
-      console.log('🔄 Force refreshing balance...');
-      console.log('📍 Active account address:', activeAccount.address);
-      console.log('📍 Account nickname:', activeAccount.nickname);
-      
-      const response = await axios.get(
-        `http://127.0.0.1:5000/api/balance/${activeAccount.address}`
-      );
-      
-      console.log('📊 API Response:', response.data);
-      console.log('💰 Balance from API:', response.data.balance);
-      
-      if (response.data.success) {
-        // Force update the active account immediately
-        setActiveAccount(prev => ({
-          ...prev,
-          balance: response.data.balance
-        }));
-        
-        // Then refresh the full accounts list
-        await fetchAccounts();
-        await fetchActiveAccount();
-        
-        console.log('✅ Balance updated successfully');
-      } else {
-        console.error('❌ API returned error:', response.data.error);
-      }
-    } catch (error) {
-      console.error('❌ Balance refresh error:', error);
-      console.error('Error response:', error.response?.data);
-    }
-  } else {
-    console.warn('⚠️ No active account selected');
-  }
-};
-
   const deleteAccount = async (accountId) => {
     try {
       console.log("Deleting account:", accountId);
@@ -163,16 +125,52 @@ function App() {
   };
 
   const sendTokens = async (toAddress, amount) => {
-    if (!activeAccount) return;
+    if (!activeAccount) {
+      throw new Error("No active account selected");
+    }
 
     try {
-      console.log("Sending tokens:", { to: toAddress, amount });
+      console.log("📤 Sending tokens...");
+      console.log("   From account ID:", activeAccount.id);
+      console.log("   From address:", activeAccount.address);
+      console.log("   To address:", toAddress);
+      console.log("   Amount:", amount);
+      console.log("   Amount type:", typeof amount);
 
-      const response = await axios.post(`${API_BASE_URL}/send`, {
-        from_account_id: activeAccount.id,
-        to_address: toAddress,
-        amount: parseFloat(amount),
-      });
+      // Validate inputs
+      if (!toAddress || toAddress.trim() === "") {
+        throw new Error("Recipient address is required");
+      }
+
+      if (!amount || parseFloat(amount) <= 0) {
+        throw new Error("Amount must be greater than 0");
+      }
+
+      // Ensure address starts with 0x
+      const formattedAddress = toAddress.startsWith("0x") 
+        ? toAddress 
+        : `0x${toAddress}`;
+
+      // Prepare payload
+      const payload = {
+        from_account_id: parseInt(activeAccount.id),
+        to_address: formattedAddress,
+        amount: parseFloat(amount)
+      };
+
+      console.log("📦 Payload:", JSON.stringify(payload, null, 2));
+
+      const response = await axios.post(
+        `${API_BASE_URL}/send`,
+        payload,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      console.log("📨 Response:", response.data);
 
       if (response.data.success) {
         console.log("✅ Transaction successful:", response.data.transaction);
@@ -180,12 +178,33 @@ function App() {
         // Refresh balances
         await fetchAccounts();
         await fetchActiveAccount();
-      }
 
-      return response.data;
+        return response.data;
+      } else {
+        throw new Error(response.data.error || "Transaction failed");
+      }
     } catch (error) {
       console.error("❌ Error sending tokens:", error);
-      throw error;
+      
+      // Better error messages
+      if (error.response) {
+        // Server responded with error
+        console.error("   Status:", error.response.status);
+        console.error("   Data:", error.response.data);
+        
+        const errorMessage = error.response.data?.error 
+          || error.response.data?.message 
+          || `Server error: ${error.response.status}`;
+        
+        throw new Error(errorMessage);
+      } else if (error.request) {
+        // Request made but no response
+        console.error("   No response from server");
+        throw new Error("No response from server. Is the backend running?");
+      } else {
+        // Error in request setup
+        throw error;
+      }
     }
   };
 
@@ -213,14 +232,13 @@ function App() {
       />
 
       <div className="main-content">
-       {activeView === "dashboard" && (
-  <Dashboard
-    accounts={accounts}
-    activeAccount={activeAccount}
-    refreshBalance={refreshBalance}
-    forceRefreshBalance={forceRefreshBalance}
-  />
-)}
+        {activeView === "dashboard" && (
+          <Dashboard
+            accounts={accounts}
+            activeAccount={activeAccount}
+            refreshBalance={refreshBalance}
+          />
+        )}
 
         {activeView === "accounts" && (
           <AccountManager
@@ -233,7 +251,10 @@ function App() {
         )}
 
         {activeView === "send" && (
-          <SendTokens activeAccount={activeAccount} sendTokens={sendTokens} />
+          <SendTokens 
+            activeAccount={activeAccount} 
+            sendTokens={sendTokens} 
+          />
         )}
 
         {activeView === "history" && (
