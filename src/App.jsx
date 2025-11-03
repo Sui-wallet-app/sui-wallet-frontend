@@ -7,7 +7,7 @@ import SendTokens from "./components/SendTokens";
 import TransactionHistory from "./components/TransactionHistory";
 import "./App.css";
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "https://sui-wallet-backend.vercel.app/api";
 
 function App() {
   const [activeView, setActiveView] = useState("dashboard");
@@ -147,28 +147,24 @@ function App() {
       }
 
       // Ensure address starts with 0x
-      const formattedAddress = toAddress.startsWith("0x") 
-        ? toAddress 
+      const formattedAddress = toAddress.startsWith("0x")
+        ? toAddress
         : `0x${toAddress}`;
 
       // Prepare payload
       const payload = {
         from_account_id: parseInt(activeAccount.id),
         to_address: formattedAddress,
-        amount: parseFloat(amount)
+        amount: parseFloat(amount),
       };
 
       console.log("📦 Payload:", JSON.stringify(payload, null, 2));
 
-      const response = await axios.post(
-        `${API_BASE_URL}/send`,
-        payload,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      const response = await axios.post(`${API_BASE_URL}/send`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       console.log("📨 Response:", response.data);
 
@@ -185,17 +181,18 @@ function App() {
       }
     } catch (error) {
       console.error("❌ Error sending tokens:", error);
-      
+
       // Better error messages
       if (error.response) {
         // Server responded with error
         console.error("   Status:", error.response.status);
         console.error("   Data:", error.response.data);
-        
-        const errorMessage = error.response.data?.error 
-          || error.response.data?.message 
-          || `Server error: ${error.response.status}`;
-        
+
+        const errorMessage =
+          error.response.data?.error ||
+          error.response.data?.message ||
+          `Server error: ${error.response.status}`;
+
         throw new Error(errorMessage);
       } else if (error.request) {
         // Request made but no response
@@ -251,10 +248,7 @@ function App() {
         )}
 
         {activeView === "send" && (
-          <SendTokens 
-            activeAccount={activeAccount} 
-            sendTokens={sendTokens} 
-          />
+          <SendTokens activeAccount={activeAccount} sendTokens={sendTokens} />
         )}
 
         {activeView === "history" && (

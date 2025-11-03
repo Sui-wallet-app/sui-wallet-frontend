@@ -18,7 +18,7 @@ function TransactionHistory({ activeAccount }) {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/transactions/${activeAccount.address}?limit=50`
+        `https://sui-wallet-backend.vercel.app/api/transactions/${activeAccount.address}?limit=50`
       );
       if (response.data.success) {
         setTransactions(response.data.transactions);
