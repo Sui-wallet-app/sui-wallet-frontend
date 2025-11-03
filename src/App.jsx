@@ -101,6 +101,44 @@ function App() {
     }
   };
 
+ const forceRefreshBalance = async () => {
+  if (activeAccount) {
+    try {
+      console.log('🔄 Force refreshing balance...');
+      console.log('📍 Active account address:', activeAccount.address);
+      console.log('📍 Account nickname:', activeAccount.nickname);
+      
+      const response = await axios.get(
+        `http://127.0.0.1:5000/api/balance/${activeAccount.address}`
+      );
+      
+      console.log('📊 API Response:', response.data);
+      console.log('💰 Balance from API:', response.data.balance);
+      
+      if (response.data.success) {
+        // Force update the active account immediately
+        setActiveAccount(prev => ({
+          ...prev,
+          balance: response.data.balance
+        }));
+        
+        // Then refresh the full accounts list
+        await fetchAccounts();
+        await fetchActiveAccount();
+        
+        console.log('✅ Balance updated successfully');
+      } else {
+        console.error('❌ API returned error:', response.data.error);
+      }
+    } catch (error) {
+      console.error('❌ Balance refresh error:', error);
+      console.error('Error response:', error.response?.data);
+    }
+  } else {
+    console.warn('⚠️ No active account selected');
+  }
+};
+
   const deleteAccount = async (accountId) => {
     try {
       console.log("Deleting account:", accountId);
@@ -175,13 +213,14 @@ function App() {
       />
 
       <div className="main-content">
-        {activeView === "dashboard" && (
-          <Dashboard
-            accounts={accounts}
-            activeAccount={activeAccount}
-            refreshBalance={refreshBalance}
-          />
-        )}
+       {activeView === "dashboard" && (
+  <Dashboard
+    accounts={accounts}
+    activeAccount={activeAccount}
+    refreshBalance={refreshBalance}
+    forceRefreshBalance={forceRefreshBalance}
+  />
+)}
 
         {activeView === "accounts" && (
           <AccountManager

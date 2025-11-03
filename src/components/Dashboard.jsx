@@ -19,7 +19,8 @@ import {
 } from "recharts";
 import axios from "axios";
 
-function Dashboard({ accounts, activeAccount, refreshBalance }) {
+
+function Dashboard({ accounts, activeAccount, refreshBalance, forceRefreshBalance }) {
   const [transactions, setTransactions] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [requestingFunds, setRequestingFunds] = useState(false);
@@ -34,10 +35,7 @@ function Dashboard({ accounts, activeAccount, refreshBalance }) {
         setRateLimitCountdown(rateLimitCountdown - 1);
       }, 1000);
       return () => clearTimeout(timer);
-    } else if (
-      rateLimitCountdown === 0 &&
-      faucetMessage.includes("Rate limit")
-    ) {
+    } else if (rateLimitCountdown === 0 && faucetMessage.includes("Rate limit")) {
       setFaucetMessage("");
     }
   }, [rateLimitCountdown, faucetMessage]);
@@ -109,7 +107,7 @@ function Dashboard({ accounts, activeAccount, refreshBalance }) {
       console.log("Error response:", error.response);
       console.log("Error status:", error.response?.status);
       console.log("Error data:", error.response?.data);
-
+      
       if (error.response?.status === 429) {
         const retryAfter = error.response?.data?.retry_after || 60;
         console.log("Setting countdown to:", retryAfter);
@@ -159,68 +157,58 @@ function Dashboard({ accounts, activeAccount, refreshBalance }) {
     <div className="dashboard">
       <div className="dashboard-header">
         <h2>Dashboard</h2>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          {activeAccount && (
-            <button
-              className="faucet-btn"
-              onClick={handleRequestFunds}
-              disabled={requestingFunds || rateLimitCountdown > 0}
-              title={
-                rateLimitCountdown > 0
-                  ? `Wait ${rateLimitCountdown}s before requesting again`
-                  : "Request testnet SUI from faucet"
-              }
-              style={{
-                opacity: requestingFunds || rateLimitCountdown > 0 ? 0.6 : 1,
-                cursor:
-                  requestingFunds || rateLimitCountdown > 0
-                    ? "not-allowed"
-                    : "pointer",
-              }}
-            >
-              {rateLimitCountdown > 0 ? (
-                <>
-                  <Clock size={20} />
-                  Wait {rateLimitCountdown}s
-                </>
-              ) : requestingFunds ? (
-                <>
-                  <RefreshCw size={20} className="spinning" />
-                  Requesting...
-                </>
-              ) : (
-                <>
-                  <Droplet size={20} />
-                  Get Testnet SUI
-                </>
-              )}
-            </button>
-          )}
-          <button
-            className={`refresh-btn ${refreshing ? "spinning" : ""}`}
-            onClick={handleRefresh}
-          >
-            <RefreshCw size={20} />
-            Refresh
-          </button>
-        </div>
+       <div style={{ display: "flex", gap: "0.5rem" }}>
+  {activeAccount && (
+    <button
+      className="faucet-btn"
+      onClick={handleRequestFunds}
+      disabled={requestingFunds || rateLimitCountdown > 0}
+      title={
+        rateLimitCountdown > 0
+          ? `Wait ${rateLimitCountdown}s before requesting again`
+          : "Request testnet SUI from faucet"
+      }
+      style={{
+        opacity: requestingFunds || rateLimitCountdown > 0 ? 0.6 : 1,
+        cursor:
+          requestingFunds || rateLimitCountdown > 0
+            ? "not-allowed"
+            : "pointer",
+      }}
+    >
+      {rateLimitCountdown > 0 ? (
+        <>
+          <Clock size={20} />
+          Wait {rateLimitCountdown}s
+        </>
+      ) : requestingFunds ? (
+        <>
+          <RefreshCw size={20} className="spinning" />
+          Requesting...
+        </>
+      ) : (
+        <>
+          <Droplet size={20} />
+          Get Testnet SUI
+        </>
+      )}
+    </button>
+  )}
+  <button
+    className={`refresh-btn ${refreshing ? "spinning" : ""}`}
+    onClick={handleRefresh}
+  >
+    <RefreshCw size={20} />
+    Refresh
+  </button>
+  <button onClick={forceRefreshBalance}>Force Refresh Balance</button>
+</div>
       </div>
 
       {faucetMessage && (
         <div className={`faucet-message ${messageType}`}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "0.75rem",
-            }}
-          >
-            {messageType === "error" && (
-              <AlertCircle
-                size={20}
-                style={{ flexShrink: 0, marginTop: "2px" }}
-              />
-            )}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+            {messageType === "error" && <AlertCircle size={20} style={{ flexShrink: 0, marginTop: "2px" }} />}
             <div style={{ flex: 1 }}>
               <div>{faucetMessage}</div>
               {rateLimitCountdown > 0 && (
