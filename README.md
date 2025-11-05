@@ -29,12 +29,6 @@ Before running this application, ensure you have:
 
 ## 🛠️ Installation & Setup
 
-### 1️⃣ Clone the Repository
-
-```bash
-git clone <your-repository-url>
-cd sui-wallet
-```
 
 ### 2️⃣ Backend Setup (Flask + PySui)
 
